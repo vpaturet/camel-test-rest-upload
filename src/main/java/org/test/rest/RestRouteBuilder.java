@@ -62,11 +62,13 @@ public class RestRouteBuilder extends RouteBuilder {
                 .produces(PLAIN)
                 .bindingMode(RestBindingMode.off)
                 .responseMessage().code(200).endResponseMessage()
-                .route()
+                .to("direct:upload");
+
+
+        from("direct:upload")
                 .convertBodyTo(byte[].class)
                 .to("direct:processUpload")
-                .routeId("rest-upload")
-                .endRest();
+                .routeId("upload");
 
         from("direct:processUpload")
                 .log(LoggingLevel.INFO, "Uploaded files")

@@ -110,7 +110,7 @@ class RestRouteTest {
 
         String fileName = "test-POST.zip";
 
-        AdviceWith.adviceWith(camelContext, "rest-upload", a -> {
+        AdviceWith.adviceWith(camelContext, "upload", a -> {
                     a.interceptSendToEndpoint("direct:processUpload")
                             .skipSendToOriginalEndpoint()
                             .to("mock:processUpload");
