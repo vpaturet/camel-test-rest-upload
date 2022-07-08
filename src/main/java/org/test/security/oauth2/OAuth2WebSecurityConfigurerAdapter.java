@@ -1,11 +1,12 @@
 package org.test.security.oauth2;
 
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.configurers.oauth2.server.resource.OAuth2ResourceServerConfigurer;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.stereotype.Component;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -17,7 +18,8 @@ import java.util.Arrays;
 @Profile("!test")
 @EnableWebSecurity
 @Component
-public class OAuth2WebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter {
+@Configuration
+public class OAuth2WebSecurityConfigurerAdapter {
 
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
@@ -30,16 +32,17 @@ public class OAuth2WebSecurityConfigurerAdapter extends WebSecurityConfigurerAda
         return source;
     }
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests()
-                .antMatchers("/**")
-                .authenticated()
-                .and()
+
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http
+                .authorizeHttpRequests((authz) -> authz
+                        .antMatchers("/**")
+                        .authenticated()
+                )
                 .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt);
+        return http.build();
     }
-
-
 
 
 }
