@@ -68,6 +68,7 @@ class RestRouteTest {
                     .anyRequest().authenticated()
                     .and()
                     .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt)
+                    // comment out this line to disable OAuth2 client
                     .oauth2Client();
         }
 
